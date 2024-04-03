@@ -2,6 +2,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AniRun.Domain", "AniRun.Domain\AniRun.Domain.csproj", "{40083A9B-6CD6-451C-B482-3B4936E2B188}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AniRun.DomainServices", "AniRun.DomainServices\AniRun.DomainServices.csproj", "{C6697020-24F2-4976-A832-146EA13E80E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AniRun.Application", "AniRun.Application\AniRun.Application.csproj", "{FB3E7FF4-80A8-4471-971B-5AB7169E2A95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AniRun.Api", "AniRun.Api\AniRun.Api.csproj", "{6DAD050D-5FD2-4B75-BA15-8A84BB08882D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +18,17 @@ Global
 		{40083A9B-6CD6-451C-B482-3B4936E2B188}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40083A9B-6CD6-451C-B482-3B4936E2B188}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40083A9B-6CD6-451C-B482-3B4936E2B188}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6697020-24F2-4976-A832-146EA13E80E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6697020-24F2-4976-A832-146EA13E80E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6697020-24F2-4976-A832-146EA13E80E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6697020-24F2-4976-A832-146EA13E80E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB3E7FF4-80A8-4471-971B-5AB7169E2A95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB3E7FF4-80A8-4471-971B-5AB7169E2A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB3E7FF4-80A8-4471-971B-5AB7169E2A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB3E7FF4-80A8-4471-971B-5AB7169E2A95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DAD050D-5FD2-4B75-BA15-8A84BB08882D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DAD050D-5FD2-4B75-BA15-8A84BB08882D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DAD050D-5FD2-4B75-BA15-8A84BB08882D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DAD050D-5FD2-4B75-BA15-8A84BB08882D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
