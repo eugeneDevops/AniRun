@@ -10,4 +10,5 @@ public interface IEntityRepository<TEntity> where TEntity : BaseRecord
     Task<TEntity> AddAsnyc(TEntity entity, CancellationToken cancellationToken = default);
     Task<TEntity> UpdateAsnyc(Guid id, TEntity entity, CancellationToken cancellationToken = default);
     Task<TEntity> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<TEntity> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

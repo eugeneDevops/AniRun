@@ -20,6 +20,6 @@ public class ViewTitle
     public Guid? StudioId { get; set; }
     public ViewStudio? Studio { get; set; }
     
-    public List<ViewMedia?> Episodes { get; set; } = new List<ViewMedia?>();
+    public List<ViewEpisode?> Episodes { get; set; } = new List<ViewEpisode?>();
     public List<ViewGenre> Genres { get; set; } = new List<ViewGenre>();
 }

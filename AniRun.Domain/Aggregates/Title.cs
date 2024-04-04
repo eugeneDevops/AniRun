@@ -21,6 +21,6 @@ public class Title : BaseRecord
     public Guid? StudioId { get; set; }
     public Studio? Studio { get; set; }
     
-    public List<Media?> Episodes { get; set; } = new List<Media?>();
+    public List<Episode?> Episodes { get; set; } = new List<Episode?>();
     public List<Genre> Genres { get; set; } = new List<Genre>();
 }

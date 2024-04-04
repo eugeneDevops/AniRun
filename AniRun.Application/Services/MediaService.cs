@@ -37,8 +37,9 @@ public class MediaService : IMediaService
         var result = new ViewMedia();
         try
         {
-            var media = _mapper.Map<IFormFile, Media>(file);
+            var media = _mapper.Map<Media>(file);
             media = await _repository.AddAsnyc(media, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
             using (var stream = file.OpenReadStream())
             {
                 var args = new PutObjectRequest
@@ -48,10 +49,10 @@ public class MediaService : IMediaService
                     InputStream = stream,
                     ContentType = media.ContentType,
                 };
-                await _s3Client.PutObjectAsync(args);
+                await _s3Client.PutObjectAsync(args, cancellationToken);
                 Console.WriteLine("Media uploaded successfully.");
             }
-            result = _mapper.Map<Media, ViewMedia>(media);
+            result = _mapper.Map<ViewMedia>(media);
         }
         catch (AmazonS3Exception e)
         {
@@ -65,16 +66,15 @@ public class MediaService : IMediaService
         ViewMedia result = new ViewMedia();
         try
         {
-            var media = await _repository.FindById(id);
-            
+            var media = await _repository.FindById(id, cancellationToken);
             var args = new GetObjectRequest
             {
                 BucketName = _bucketName,
                 Key = media.Id.ToString(),
             };
 
-            var response = await _s3Client.GetObjectAsync(args);
-            result = _mapper.Map<Media, ViewMedia>(media);
+            var response = await _s3Client.GetObjectAsync(args, cancellationToken);
+            result = _mapper.Map<ViewMedia>(media);
             result.FileStream = response.ResponseStream;
         }
         catch (AmazonS3Exception e)
@@ -96,16 +96,16 @@ public class MediaService : IMediaService
                 BucketName = _bucketName,
                 Key = media.Id.ToString()
             };
-            await _s3Client.DeleteObjectAsync(args);
+            await _s3Client.DeleteObjectAsync(args, cancellationToken);
             media = await _repository.DeleteAsync(id, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
             Console.WriteLine("Media deleted successfully.");
-            result = _mapper.Map<Media, ViewMedia>(media);
+            result = _mapper.Map<ViewMedia>(media);
         }
         catch (AmazonS3Exception e)
         {
             Console.WriteLine("Error encountered on server. Message:'{0}' when deleting an media", e.Message);
         }
-
         return result;
     }
 }

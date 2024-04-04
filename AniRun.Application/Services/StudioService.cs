@@ -21,7 +21,7 @@ public class StudioService : IStudioService
     {
         var result = new List<ViewStudio>();
         var studios = await _repository.FindAll();
-        result = _mapper.Map<List<Studio>, List<ViewStudio>>(studios);
+        result = _mapper.Map<List<ViewStudio>>(studios);
         return result;
     }
 
@@ -31,7 +31,7 @@ public class StudioService : IStudioService
         var studio = await _repository.FindById(id, cancellationToken);
         if (studio == null)
             return result;
-        result = _mapper.Map<Studio, ViewStudio>(studio);
+        result = _mapper.Map<ViewStudio>(studio);
         return result;
     }
 
@@ -40,9 +40,10 @@ public class StudioService : IStudioService
         var result = new ViewStudio();
         if (formStudio == null)
             return result;
-        var studio = _mapper.Map<FormStudio, Studio>(formStudio);
-        studio = await _repository.AddAsnyc(studio);
-        result = _mapper.Map<Studio, ViewStudio>(studio);
+        var studio = _mapper.Map<Studio>(formStudio);
+        studio = await _repository.AddAsnyc(studio, cancellationToken);
+        await _repository.SaveChangesAsync(cancellationToken);
+        result = _mapper.Map<ViewStudio>(studio);
         return result;
     }
 
@@ -54,9 +55,10 @@ public class StudioService : IStudioService
         var studioDb = await _repository.FindById(id, cancellationToken);
         if (studioDb == null)
             return result;
-        var studio = _mapper.Map<FormStudio, Studio>(formStudio);
+        var studio = _mapper.Map<Studio>(formStudio);
         studio = await  _repository.UpdateAsnyc(id, studio, cancellationToken);
-        result = _mapper.Map<Studio, ViewStudio>(studio);
+        await _repository.SaveChangesAsync(cancellationToken);
+        result = _mapper.Map<ViewStudio>(studio);
         return result;
     }
 
@@ -67,7 +69,8 @@ public class StudioService : IStudioService
         if (studio == null)
             return result;
         studio = await _repository.DeleteAsync(id, cancellationToken);
-        result = _mapper.Map<Studio, ViewStudio>(studio);
+        await _repository.SaveChangesAsync(cancellationToken);
+        result = _mapper.Map<ViewStudio>(studio);
         return result;
     }
 }
