@@ -1,0 +1,48 @@
+@inject IGenreService _genreService 
+
+<Button Style="margin-bottom: 20px;" Type="Primary" OnClick="ShowModal">Добавить жанр</Button>
+
+<Modal Visible="_visible" OnCancel="@HandleCancel" Footer="null">
+    <h3 class="text-center">Добавление жанра</h3>
+    <Form Model="Genre" OnFinish="OnFinish">
+        <FormItem Style="margin-top: 30px;">
+            <Input Placeholder="Название жанра" @bind-Value="@Genre.Name"></Input>
+        </FormItem>
+        <FormItem Style="margin-top: 30px;">
+            <Input Placeholder="Описание" @bind-Value="@Genre.Description"></Input>
+        </FormItem>
+        <FormItem>
+            <Button Type="@ButtonType.Primary" HtmlType="submit">
+                Создать
+            </Button>
+        </FormItem>
+    </Form>
+</Modal>
+
+@code {
+    [Parameter] public EventCallback OnGenreCreated { get; set; }
+    public bool _visible;
+    public FormGenre Genre = new();
+
+    private void ShowModal()
+    {
+        _visible = true;
+        Genre = new FormGenre();
+    }
+
+    private void HandleCancel()
+    {
+        _visible = false;
+    }
+    
+    private async Task OnFinish(EditContext context)
+    {
+        var model = context.Model as FormGenre;
+        if (!String.IsNullOrWhiteSpace(model?.Name))
+        {
+            await _genreService.CreateGenre(model);
+            await OnGenreCreated.InvokeAsync();
+            _visible = false;
+        }
+    }
+}

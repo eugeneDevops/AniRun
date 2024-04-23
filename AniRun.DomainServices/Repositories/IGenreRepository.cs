@@ -1,4 +1,4 @@
-using AniRun.Domain.Models;
+using AniRun.Domain.Aggregates;
 using AniRun.DomainServices.Base;
 
 namespace AniRun.DomainServices.Repositories;

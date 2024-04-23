@@ -2,7 +2,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using AniRun.Application.Models;
 using AniRun.Application.Models.ViewModels;
-using AniRun.Domain.Models;
+using AniRun.Domain.Aggregates;
 using AniRun.DomainServices.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;

@@ -1,0 +1,23 @@
+﻿<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="@assemblies">
+        <Found Context="routeData">
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+<AntContainer/>
+
+@code {
+    IEnumerable<System.Reflection.Assembly> assemblies = new List<System.Reflection.Assembly>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        assemblies = assemblies.Append(typeof(ExampleJsInterop).Assembly);
+    }
+}

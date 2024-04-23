@@ -1,0 +1,14 @@
+﻿version: '3.7'
+
+services:
+  s3server:
+    image: scality/s3server
+    ports:
+      - "8000:8000"
+    environment:
+      - dataDir=/usr/src/app/localS3Data
+      - accessKey=5e806973-626b-4a2f-ba82-d99d9a995eae     # Значения заменены на переменные среды
+      - secretKey=eb303786-3e5b-4e74-bee0-49e993ccdf45     # для безопасного хранения учетных данных
+    volumes:
+      - ./localS3Data:/usr/src/app/localS3Data
+    restart: always

@@ -1,0 +1,58 @@
+@inject IGenreService _genreService 
+@inject IMapper _mapper;
+
+<Button Type="Primary" OnClick="ShowModal">Редактировать</Button>
+
+<Modal 
+    AfterClose="async () => { if (OnGenreEdited.HasDelegate) 
+    { 
+        await OnGenreEdited.InvokeAsync();
+    }}" 
+    Visible="_visible" 
+    OnCancel="@HandleCancel" 
+    Footer="null">
+    <h3 class="text-center">Редактирование жанра</h3>
+    <Form Model="mappedGenre" OnFinish="OnFinish">
+        <FormItem Style="margin-top: 30px;">
+            <Input Placeholder="Название жанра" @bind-Value="@mappedGenre.Name"></Input>
+        </FormItem>
+        <FormItem Style="margin-top: 30px;">
+            <Input Placeholder="Описание" @bind-Value="@mappedGenre.Description"></Input>
+        </FormItem>
+        <FormItem>
+            <Button Type="@ButtonType.Primary" HtmlType="submit">
+                Редактировать
+            </Button>
+        </FormItem>
+    </Form>
+</Modal>
+
+@code {
+    [Parameter] public ViewGenre Genre { get; set; }
+    [Parameter] public EventCallback OnGenreEdited { get; set; }
+    private FormGenre mappedGenre { get; set; } = new();
+    private bool _visible;
+
+    public void ShowModal()
+    {
+        _visible = true;
+        mappedGenre = _mapper.Map<FormGenre>(Genre);
+        StateHasChanged();
+
+    }
+
+    public void HandleCancel()
+    {
+        _visible = false;
+    }
+
+    public async Task OnFinish(EditContext context)
+    {
+        var model = context.Model as FormGenre;
+        if (!String.IsNullOrWhiteSpace(model?.Name))
+        {
+            await _genreService.UpdateGenre(Genre.Id,model);
+            _visible = false;
+        }
+    }
+}

@@ -1,6 +1,6 @@
 using AniRun.Application.Models.FormModels;
 using AniRun.Application.Models.ViewModels;
-using AniRun.Domain.Models;
+using AniRun.Domain.Aggregates;
 using AniRun.DomainServices.Repositories;
 using AutoMapper;
 

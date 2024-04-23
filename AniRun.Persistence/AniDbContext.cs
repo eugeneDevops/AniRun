@@ -1,4 +1,4 @@
-using AniRun.Domain.Models;
+using AniRun.Domain.Aggregates;
 using Microsoft.EntityFrameworkCore;
 
 namespace AniRun.Persistence;

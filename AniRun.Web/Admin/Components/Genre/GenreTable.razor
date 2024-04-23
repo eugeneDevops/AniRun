@@ -1,0 +1,29 @@
+@inject IGenreService _genreService
+
+<Table TItem="ViewGenre" DataSource="Genres">
+    <PropertyColumn Title="Название" Property="c => c.Name" Sortable/>
+    <PropertyColumn Title="Описание" Property="c => c.Description"/>
+    <ActionColumn Width="100">
+        <Space>
+            <SpaceItem>
+                <UpdateGenre Genre="@context" OnGenreEdited="OnGenresChange"/>
+            </SpaceItem>
+            <SpaceItem>
+                <Popconfirm Title="Удалить жанр?" OnConfirm="async () => await DeleteGenre(context.Id)" OkText="Да" CancelText="Нет">
+                    <Button>Удалить</Button>
+                </Popconfirm>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
+</Table>
+
+@code {
+    [Parameter] public List<ViewGenre> Genres { get; set; }
+    [Parameter] public EventCallback OnGenresChange { get; set; }
+
+    public async Task DeleteGenre(Guid genreId)
+    {
+        await _genreService.DeleteGenre(genreId);
+        await OnGenresChange.InvokeAsync();
+    }
+}

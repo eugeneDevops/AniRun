@@ -1,6 +1,6 @@
 using AniRun.Domain.Base;
 
-namespace AniRun.Domain.Models;
+namespace AniRun.Domain.Aggregates;
 
 public class Studio : BaseRecord
 {

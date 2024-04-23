@@ -1,0 +1,17 @@
+@page "/admin/genres"
+@inject IGenreService _genreService
+
+<PageTitle>Жанры</PageTitle>
+
+<h3>Жанры</h3>
+<CreateGenre OnGenreCreated="OnInitializedAsync" />
+<GenreTable OnGenresChange="OnInitializedAsync" Genres="Genres" />
+
+@code {
+    public List<ViewGenre> Genres = new List<ViewGenre>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        Genres = await _genreService.GetGenres();
+    }
+}

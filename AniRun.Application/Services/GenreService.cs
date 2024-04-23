@@ -1,6 +1,6 @@
 using AniRun.Application.Models.FormModels;
 using AniRun.Application.Models.ViewModels;
-using AniRun.Domain.Models;
+using AniRun.Domain.Aggregates;
 using AniRun.DomainServices.Repositories;
 using AutoMapper;
 
@@ -54,10 +54,9 @@ public class GenreService : IGenreService
         var genreDb = await _repository.FindById(id, cancellationToken);
         if (genreDb == null)
             return result;
-        var genre = _mapper.Map<Genre>(formGenre);
-        genre = await  _repository.UpdateAsnyc(id, genre, cancellationToken);
+        _mapper.Map(formGenre,genreDb);
         await _repository.SaveChangesAsync(cancellationToken);
-        result = _mapper.Map<ViewGenre>(genre);
+        result = _mapper.Map<ViewGenre>(genreDb);
         return result;
     }
 

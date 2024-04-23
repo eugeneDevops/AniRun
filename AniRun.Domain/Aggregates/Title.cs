@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using AniRun.Domain.Base;
 using AniRun.Domain.Enums;
 
-namespace AniRun.Domain.Models;
+namespace AniRun.Domain.Aggregates;
 
 public class Title : BaseRecord
 {
