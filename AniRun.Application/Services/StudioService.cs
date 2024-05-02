@@ -55,10 +55,9 @@ public class StudioService : IStudioService
         var studioDb = await _repository.FindById(id, cancellationToken);
         if (studioDb == null)
             return result;
-        var studio = _mapper.Map<Studio>(formStudio);
-        studio = await  _repository.UpdateAsnyc(id, studio, cancellationToken);
+        _mapper.Map(formStudio,studioDb);
         await _repository.SaveChangesAsync(cancellationToken);
-        result = _mapper.Map<ViewStudio>(studio);
+        result = _mapper.Map<ViewStudio>(studioDb);
         return result;
     }
 

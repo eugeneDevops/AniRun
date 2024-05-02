@@ -1,0 +1,28 @@
+@inject IStudioService _studioService
+
+<Table TItem="ViewStudio" DataSource="Studios">
+    <PropertyColumn Title="Название" Property="c => c.Name" Sortable/>
+    <ActionColumn Width="100">
+        <Space>
+            <SpaceItem>
+                <UpdateStudio Studio="@context" OnStudioEdited="OnStudiosChange"/>
+            </SpaceItem>
+            <SpaceItem>
+                <Popconfirm Title="Удалить студию?" OnConfirm="async () => await DeleteStudio(context.Id)" OkText="Да" CancelText="Нет">
+                    <Button>Удалить</Button>
+                </Popconfirm>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
+</Table>
+
+@code {
+    [Parameter] public List<ViewStudio> Studios { get; set; }
+    [Parameter] public EventCallback OnStudiosChange { get; set; }
+
+    public async Task DeleteStudio(Guid genreId)
+    {
+        await _studioService.DeleteStudio(genreId);
+        await OnStudiosChange.InvokeAsync();
+    }
+}

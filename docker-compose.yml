@@ -6,9 +6,9 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - dataDir=/usr/src/app/localS3Data
+      - port=8000
       - accessKey=5e806973-626b-4a2f-ba82-d99d9a995eae     # Значения заменены на переменные среды
       - secretKey=eb303786-3e5b-4e74-bee0-49e993ccdf45     # для безопасного хранения учетных данных
     volumes:
-      - ./localS3Data:/usr/src/app/localS3Data
+      - /path/to/store/data:/usr/src/app/localData
     restart: always

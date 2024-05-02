@@ -1,0 +1,55 @@
+@inject IStudioService _studioService 
+@inject IMapper _mapper;
+
+<Button Type="Primary" OnClick="ShowModal">Редактировать</Button>
+
+<Modal 
+    AfterClose="async () => { if (OnStudioEdited.HasDelegate) 
+{ 
+    await OnStudioEdited.InvokeAsync();
+}}" 
+    Visible="_visible" 
+    OnCancel="@HandleCancel" 
+    Footer="null">
+    <h3 class="text-center">Редактирование студии</h3>
+    <Form Model="MappedStudio" OnFinish="OnFinish">
+        <FormItem Style="margin-top: 30px;">
+            <Input Placeholder="Название студии" @bind-Value="@MappedStudio.Name"></Input>
+        </FormItem>
+        <FormItem>
+            <Button Type="@ButtonType.Primary" HtmlType="submit">
+                Редактировать
+            </Button>
+        </FormItem>
+    </Form>
+</Modal>
+
+@code {
+    [Parameter] public ViewStudio Studio { get; set; }
+    [Parameter] public EventCallback OnStudioEdited { get; set; }
+    private FormStudio MappedStudio { get; set; } = new();
+    private bool _visible;
+
+    public void ShowModal()
+    {
+        _visible = true;
+        MappedStudio = _mapper.Map<FormStudio>(Studio);
+        StateHasChanged();
+
+    }
+
+    public void HandleCancel()
+    {
+        _visible = false;
+    }
+
+    public async Task OnFinish(EditContext context)
+    {
+        var model = context.Model as FormStudio;
+        if (!String.IsNullOrWhiteSpace(model?.Name))
+        {
+            await _studioService.UpdateStudio(Studio.Id, model);
+            _visible = false;
+        }
+    }
+}

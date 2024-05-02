@@ -19,7 +19,7 @@ public class AnimeProfile : Profile
         
         CreateMap<ViewStudio, Studio>().ReverseMap();
         CreateMap<FormStudio, Studio>().ReverseMap();
-        CreateMap<ViewGenre, FormStudio>().ReverseMap();
+        CreateMap<ViewStudio, FormStudio>().ReverseMap();
         
         CreateMap<ViewTitle, Title>().ReverseMap();
         CreateMap<FormTitle, Title>().ReverseMap();

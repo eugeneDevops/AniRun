@@ -17,9 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Admin\Components\Studio\" />
       <Folder Include="Admin\Components\Title\" />
-      <Folder Include="Admin\Pages\Studio\" />
       <Folder Include="Admin\Pages\Title\" />
       <Folder Include="Web\Components\" />
       <Folder Include="Web\Pages\" />

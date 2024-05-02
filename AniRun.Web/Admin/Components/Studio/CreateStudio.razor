@@ -1,0 +1,45 @@
+@inject IStudioService _studioService 
+
+<Button Style="margin-bottom: 20px;" Type="Primary" OnClick="ShowModal">Добавить студию</Button>
+
+<Modal Visible="_visible" OnCancel="@HandleCancel" Footer="null">
+    <h3 class="text-center">Добавление студии</h3>
+    <Form Model="Studio" OnFinish="OnFinish">
+        <FormItem Style="margin-top: 30px;">
+            <Input Placeholder="Название студии" @bind-Value="@Studio.Name"></Input>
+        </FormItem>
+        <FormItem>
+            <Button Type="@ButtonType.Primary" HtmlType="submit">
+                Создать
+            </Button>
+        </FormItem>
+    </Form>
+</Modal>
+
+@code {
+    [Parameter] public EventCallback OnStudioCreated { get; set; }
+    public bool _visible;
+    public FormStudio Studio = new();
+
+    private void ShowModal()
+    {
+        _visible = true;
+        Studio = new FormStudio();
+    }
+
+    private void HandleCancel()
+    {
+        _visible = false;
+    }
+    
+    private async Task OnFinish(EditContext context)
+    {
+        var model = context.Model as FormStudio;
+        if (!String.IsNullOrWhiteSpace(model?.Name))
+        {
+            await _studioService.CreateStuido(model);
+            await OnStudioCreated.InvokeAsync();
+            _visible = false;
+        }
+    }
+}

@@ -26,7 +26,10 @@ public class MediaService : IMediaService
             credentialsStorage.SecretKey
         );
         
-        _s3Client = new AmazonS3Client(credentials);
+        _s3Client = new AmazonS3Client(credentials, new AmazonS3Config()
+        {
+            ServiceURL = credentialsStorage.Link,
+        });
         _bucketName = credentialsStorage.BucketName;
         _repository = repository;
         _mapper = mapper;

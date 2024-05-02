@@ -1,0 +1,17 @@
+@page "/admin/studios"
+@inject IStudioService _studioService
+
+<PageTitle>Студии</PageTitle>
+
+<h3>Студии</h3>
+<CreateStudio OnStudioCreated="OnInitializedAsync" />
+<StudioTable OnStudiosChange="OnInitializedAsync" Studios="Studios" />
+
+@code {
+    public List<ViewStudio> Studios = new List<ViewStudio>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        Studios = await _studioService.GetStudios();
+    }
+}
