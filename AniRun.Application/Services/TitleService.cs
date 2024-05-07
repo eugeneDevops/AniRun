@@ -26,6 +26,8 @@ public class TitleService : ITitleService
         var result = new List<ViewTitle>();
         var titles = await _repository.FindAll(cancellationToken);
         result = _mapper.Map<List<ViewTitle>>(titles);
+        foreach (var title in result)
+            title.Picture.Url = _mediaService.GetUrlMedia(title.PictureId.Value);
         return result;
     }
 
@@ -34,6 +36,7 @@ public class TitleService : ITitleService
         var result = new ViewTitle();
         var title = await _repository.FindById(id, cancellationToken);
         result = _mapper.Map<ViewTitle>(title);
+        result.Picture.Url = _mediaService.GetUrlMedia(title.PictureId.Value);
         return result;
     }
 

@@ -1,0 +1,60 @@
+<Button Type="Primary" OnClick="ShowModal">Подробнее</Button>
+
+<Modal Width="1000" Visible="_visible" OnCancel="@HandleCancel" Footer="null">
+    <h3 class="text-center">Подробности об аниме @Title.Name</h3>
+    <div style="height: 300px; width: 330px;">
+        <img class="rounded float-left" style="width:100%; height:100%; border-radius:10px; object-fit: cover;" src="@Title.Picture.Url" />
+    </div>
+    <dl class="row fs-5">
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Название</dt>
+        <dd style="margin-top: 20px;" class="col-sm-9">@Title.Name</dd>
+
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Описание</dt>
+        <dd style="margin-top: 20px;" class="col-sm-9">@Title.Description</dd>
+
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Длительность</dt>
+        <dd style="margin-top: 20px;" class="col-sm-9">@Title.Duration</dd>
+
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Начало выхода</dt>
+        <dd style="margin-top: 20px;" class="col-sm-9">@Title.StartDateTitle</dd>
+
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Конец выхода</dt>
+        <dd style="margin-top: 20px;" class="col-sm-9">@Title.EndDateTitle</dd>
+
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Количество эпизодов</dt>
+        <dd style="margin-top: 20px;" class="col-sm-9">@Title.LastEpisode</dd>
+        
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Тип</dt>
+        <dd style="margin-top: 20px;" class="col-sm-9">@Title.Type</dd>
+        
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Статус</dt>
+        <dd style="margin-top: 20px;" class="col-sm-9">@Title.Status</dd>
+        
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Возрастная категория</dt>
+        <dd style="margin-top: 20px;" class="col-sm-9">@Title.Rating</dd>
+        
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Студия</dt>
+        <dd style="margin-top: 20px;" class="col-sm-9">@Title.Studio.Name</dd>
+    </dl>
+</Modal>
+
+@code {
+    [Parameter] public ViewTitle Title { get; set; }
+
+    public bool _visible;
+
+    private void ShowModal()
+    {
+        _visible = true;
+    }
+
+    private void HandleCancel()
+    {
+        _visible = false;
+    }
+
+    private async Task OnFinish()
+    {
+        _visible = false;
+    }
+}

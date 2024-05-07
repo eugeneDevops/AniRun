@@ -17,14 +17,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Admin\Components\Title\" />
-      <Folder Include="Admin\Pages\Title\" />
       <Folder Include="Web\Components\" />
       <Folder Include="Web\Pages\" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AniRun.Application\AniRun.Application.csproj" />
+        <ProjectReference Include="..\AniRun.Application\AniRun.Domain.csproj" />
+        <ProjectReference Include="..\AniRun.Application\AniRun.Application.csproj" />
+        <ProjectReference Include="..\AniRun.Persistence\AniRun.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

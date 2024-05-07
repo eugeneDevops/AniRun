@@ -1,0 +1,17 @@
+@page "/admin/titles"
+@inject ITitleService _titleService
+
+<PageTitle>Тайтлы</PageTitle>
+
+<h3>Тайтлы</h3>
+<CreateTitle OnTitleCreated="OnInitializedAsync" />
+<TitleTable OnTitlesChange="OnInitializedAsync" Titles="Titles" />
+
+@code {
+    public List<ViewTitle> Titles = new List<ViewTitle>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        Titles = await _titleService.GetTitles();
+    }
+}

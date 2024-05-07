@@ -1,4 +1,6 @@
-﻿<CascadingAuthenticationState>
+﻿@inject IMediaService _service
+
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="@assemblies">
         <Found Context="routeData">
             <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
@@ -16,7 +18,7 @@
 @code {
     IEnumerable<System.Reflection.Assembly> assemblies = new List<System.Reflection.Assembly>();
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         assemblies = assemblies.Append(typeof(ExampleJsInterop).Assembly);
     }

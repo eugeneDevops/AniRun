@@ -1,0 +1,32 @@
+@inject ITitleService _titleService
+
+<Table TItem="ViewTitle" DataSource="Titles">
+    <PropertyColumn Title="Название" Property="@(c => c.Name)" Sortable/>
+    <PropertyColumn Title="Тип" Property="@(c => c.Type)" Sortable/>
+    <PropertyColumn Title="Статус" Property="@(c => c.Status)" Sortable/>
+    <PropertyColumn Title="Возрастная категория" Property="@(c => c.Rating)" Sortable/>
+    <ActionColumn Width="100"><DetailsTitle Title="@context"></DetailsTitle></ActionColumn>
+    <ActionColumn Width="100">
+        <Space>
+            <SpaceItem>
+                <UpdateTitle Studio="@context" OnTitleEdited="OnTitlesChange"/>
+            </SpaceItem>
+            <SpaceItem>
+                <Popconfirm Title="Удалить аниме?" OnConfirm="async () => await DeleteTitle(context.Id)" OkText="Да" CancelText="Нет">
+                    <Button>Удалить</Button>
+                </Popconfirm>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
+</Table>
+
+@code {
+    [Parameter] public List<ViewTitle> Titles { get; set; }
+    [Parameter] public EventCallback OnTitlesChange { get; set; }
+
+    public async Task DeleteTitle(Guid titleId)
+    {
+        await _titleService.DeleteTitle(titleId);
+        await OnTitlesChange.InvokeAsync();
+    }
+}

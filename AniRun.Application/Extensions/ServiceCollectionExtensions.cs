@@ -12,7 +12,6 @@ public static class ServiceCollectionExtensions
     public static void AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
         var currentAssembly = typeof(AnimeProfile).Assembly;
-        services.AddScoped<IAmazonS3>();
         services.AddScoped<ITitleService, TitleService>();
         services.AddScoped<IStudioService, StudioService>();
         services.AddScoped<IGenreService, GenreService>();

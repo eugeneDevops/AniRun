@@ -3,6 +3,7 @@ using AniRun.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace AniRun.Persistence.Extensions;
 
@@ -10,7 +11,8 @@ public static class ServiceCollectionExtensions
 {
     public static void AddPersistenceService(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<AniDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("BaseConnection")));
+        services.AddDbContextFactory<AniDbContext>(
+            options => options.UseNpgsql(configuration.GetConnectionString("BaseConnection")));
         services.AddScoped<IEpisodeRepository, EpisodeRepository>();
         services.AddScoped<IGenreRepository, GenreRepository>();
         services.AddScoped<IMediaRepository, MediaRepository>();

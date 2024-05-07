@@ -1,0 +1,154 @@
+@inject ITitleService _titleService 
+@inject IGenreService _genreService 
+@inject IStudioService _studioService 
+
+<Button Style="margin-bottom: 20px;" Type="Primary" OnClick="ShowModal">Добавить аниме</Button>
+
+<Modal Width="1000" Visible="_visible" OnCancel="@HandleCancel" Footer="null">
+    <h3 class="text-center">Добавление аниме</h3>
+    <Form Model="Title" OnFinish="OnFinish">
+        <FormItem Style="margin-top: 30px;">
+            <Input Placeholder="Название студии" @bind-Value="@Title.Name"></Input>
+        </FormItem>
+        
+        <FormItem Style="margin-top: 30px;">
+            <Input Placeholder="Описание" @bind-Value="@Title.Name"></Input>
+        </FormItem>
+        
+        <FormItem Required Label="Длительность эпизода" Style="margin: 20px 0;">
+            <TimePicker TValue="TimeSpan?" Picker="@DatePickerType.Time" @bind-Value="@Title.Duration"/>
+        </FormItem>
+        
+        <FormItem Required Label="Начало выхода" Style="margin: 20px 0;">
+            <DatePicker TValue="DateTimeOffset" DefaultValue="DateTimeOffset.Now" Picker="@DatePickerType.Date" @bind-Value="@Title.StartDateTitle"/>
+        </FormItem>
+                
+        <FormItem Required Label="Конец выхода" Style="margin: 20px 0;">
+            <DatePicker TValue="DateTimeOffset?" Picker="@DatePickerType.Date" @bind-Value="@Title.EndDateTitle"/>
+        </FormItem>
+        
+        <FormItem>
+            <AntDesign.InputNumber  Style="width:200px" @bind-Value="@Title.LastEpisode" Min="1" Max="9999" PlaceHolder="Последняя серия"></AntDesign.InputNumber>
+        </FormItem>
+        
+        <FormItem Required Label="Тип аниме" Style="margin: 20px 0;">
+            <EnumSelect TEnum="TypeTitle" @bind-Value=@Title.Type />
+        </FormItem>
+        
+        <FormItem Required Label="Статус аниме" Style="margin: 20px 0;">
+            <EnumSelect TEnum="StatusTitle" @bind-Value=@Title.Status />
+        </FormItem>
+        
+        <FormItem Required Label="Возрастная категория" Style="margin: 20px 0;">
+            <EnumSelect TEnum="Rating" @bind-Value=@Title.Rating />
+        </FormItem>
+        
+        <FormItem Label="Студия" Style="margin: 20px 0;">
+            <Select TItem="ViewStudio"
+                    TItemValue="Guid?"
+                    LabelName="@nameof(ViewStudio.Name)"
+                    ValueName="@nameof(ViewStudio.Id)"
+                    @bind-Value="@Title.StudioId"
+                    DataSource="Studios"
+                    EnableSearch/>
+        </FormItem>
+        
+        <FormItem Label="Жанры" Style="margin: 20px 0;">
+            <Select TItem="ViewGenre"
+                    TItemValue="Guid?"
+                    Mode="multiple"
+                    LabelName="@nameof(ViewGenre.Name)"
+                    ValueName="@nameof(ViewGenre.Id)"
+                    bind-Values="@Title.Genres"
+                    DataSource="Genres"
+                    EnableSearch />
+        </FormItem>
+        
+        <FormItem Label="Постер аниме">
+            <InputFile id="fileInput" OnChange="UploadFile" hidden/>
+            <Upload Name="file" FileList="fileList">
+                <label class="ant-btn" for="fileInput">
+                    <Icon Type="upload"/>
+                    Прикрепить файл
+                </label>
+            </Upload>
+            <Spin Style="margin-top: 10px; margin-bottom: 10px;" Spinning=@_fileLoading></Spin>
+        </FormItem>
+        
+        <FormItem>
+            <Button Type="@ButtonType.Primary" HtmlType="submit">
+                Создать
+            </Button>
+        </FormItem>
+    </Form>
+</Modal>
+
+@code {
+    [Parameter] public EventCallback OnTitleCreated { get; set; }
+    public bool _visible;
+    public bool _fileLoading;
+    List<UploadFileItem> fileList = new();
+    public FormMedia Image { get; set; }
+    public FormTitle Title = new();
+    public List<ViewGenre> Genres = new List<ViewGenre>();
+    public List<ViewStudio> Studios = new();
+
+    private async Task ShowModal()
+    {
+        _visible = true;
+        Title = new FormTitle();
+        
+        Studios = await _studioService.GetStudios();
+        Genres = await _genreService.GetGenres();
+    }
+
+    private void HandleCancel()
+    {
+        _visible = false;
+    }
+    
+    private async Task OnFinish(EditContext context)
+    {
+        var model = context.Model as FormTitle;
+        for (int i = 0; i < model.Genres.Count; i++)
+        {
+            model.Genres[i] = await _genreService.GetGenre(model.Genres[i].Id);
+        }
+        await _titleService.CreateTitle(model);
+        await OnTitleCreated.InvokeAsync();
+        _visible = false;
+    }
+    
+    private async Task UploadFile(InputFileChangeEventArgs e)
+    {
+        _fileLoading = true;
+        StateHasChanged();
+
+        var file = e.File;
+        using var memoryStream = new MemoryStream();
+        await file.OpenReadStream(e.File.Size).CopyToAsync(memoryStream);
+        var imageBytes = memoryStream.ToArray();
+
+        Image = new FormMedia()
+        {
+            ContentType = file.ContentType,
+            FileName = file.Name,
+            FileBytes = imageBytes,
+        };
+
+        fileList = new List<UploadFileItem>()
+        {
+            new()
+            {
+                FileName = file.Name,
+                Size = file.Size
+            }
+        };
+
+        _fileLoading = false;
+        Title.Picture = Image;
+        StateHasChanged();
+
+    }
+
+}
