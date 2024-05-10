@@ -7,10 +7,10 @@ public class ViewTitle
     public Guid Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
-    public TimeSpan? Duration { get; set; }
+    public TimeOnly? Duration { get; set; }
     public DateTimeOffset StartDateTitle { get; set; }
     public DateTimeOffset? EndDateTitle { get;set; }
-    public ViewMedia Picture { get; set; }
+    public ViewMedia? Picture { get; set; }
     public Guid? PictureId { get; set; }
     public int? LastEpisode { get; set; }
     public TypeTitle Type { get; set; }

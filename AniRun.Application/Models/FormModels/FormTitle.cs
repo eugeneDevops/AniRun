@@ -8,7 +8,7 @@ public class FormTitle
 {
     public string Name { get; set; }
     public string Description { get; set; }
-    public TimeSpan? Duration { get; set; }
+    public TimeOnly? Duration { get; set; }
     public DateTimeOffset StartDateTitle { get; set; }
     public DateTimeOffset? EndDateTitle { get;set; }
     public FormMedia? Picture { get; set; }
@@ -20,5 +20,5 @@ public class FormTitle
     public Guid? StudioId { get; set; }
     
     public List<FormEpisode?> Episodes { get; set; } = new List<FormEpisode?>();
-    public List<ViewGenre> Genres { get; set; } = new List<ViewGenre>();
+    public IEnumerable<ViewGenre> Genres { get; set; } = new List<ViewGenre>();
 }

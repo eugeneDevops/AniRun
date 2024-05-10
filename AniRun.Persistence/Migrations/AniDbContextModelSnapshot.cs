@@ -23,7 +23,7 @@ namespace AniRun.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AniRun.Domain.Models.Episode", b =>
+            modelBuilder.Entity("AniRun.Domain.Aggregates.Episode", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,7 +57,7 @@ namespace AniRun.Persistence.Migrations
                     b.ToTable("Episodes", "AniRun");
                 });
 
-            modelBuilder.Entity("AniRun.Domain.Models.Genre", b =>
+            modelBuilder.Entity("AniRun.Domain.Aggregates.Genre", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,7 +82,7 @@ namespace AniRun.Persistence.Migrations
                     b.ToTable("Genres", "AniRun");
                 });
 
-            modelBuilder.Entity("AniRun.Domain.Models.Media", b =>
+            modelBuilder.Entity("AniRun.Domain.Aggregates.Media", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,7 +107,7 @@ namespace AniRun.Persistence.Migrations
                     b.ToTable("Medias", "AniRun");
                 });
 
-            modelBuilder.Entity("AniRun.Domain.Models.Studio", b =>
+            modelBuilder.Entity("AniRun.Domain.Aggregates.Studio", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,7 +128,7 @@ namespace AniRun.Persistence.Migrations
                     b.ToTable("Studios", "AniRun");
                 });
 
-            modelBuilder.Entity("AniRun.Domain.Models.Title", b =>
+            modelBuilder.Entity("AniRun.Domain.Aggregates.Title", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -141,8 +141,8 @@ namespace AniRun.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<TimeSpan?>("Duration")
-                        .HasColumnType("interval");
+                    b.Property<DateTimeOffset?>("Duration")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset>("EditedAt")
                         .HasColumnType("timestamp with time zone");
@@ -199,15 +199,15 @@ namespace AniRun.Persistence.Migrations
                     b.ToTable("GenreTitle", "AniRun");
                 });
 
-            modelBuilder.Entity("AniRun.Domain.Models.Episode", b =>
+            modelBuilder.Entity("AniRun.Domain.Aggregates.Episode", b =>
                 {
-                    b.HasOne("AniRun.Domain.Models.Title", "Title")
+                    b.HasOne("AniRun.Domain.Aggregates.Title", "Title")
                         .WithMany("Episodes")
                         .HasForeignKey("TitleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AniRun.Domain.Models.Media", "Video")
+                    b.HasOne("AniRun.Domain.Aggregates.Media", "Video")
                         .WithMany()
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -218,13 +218,13 @@ namespace AniRun.Persistence.Migrations
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("AniRun.Domain.Models.Title", b =>
+            modelBuilder.Entity("AniRun.Domain.Aggregates.Title", b =>
                 {
-                    b.HasOne("AniRun.Domain.Models.Media", "Picture")
+                    b.HasOne("AniRun.Domain.Aggregates.Media", "Picture")
                         .WithMany()
                         .HasForeignKey("PictureId");
 
-                    b.HasOne("AniRun.Domain.Models.Studio", "Studio")
+                    b.HasOne("AniRun.Domain.Aggregates.Studio", "Studio")
                         .WithMany("Titles")
                         .HasForeignKey("StudioId");
 
@@ -235,25 +235,25 @@ namespace AniRun.Persistence.Migrations
 
             modelBuilder.Entity("GenreTitle", b =>
                 {
-                    b.HasOne("AniRun.Domain.Models.Genre", null)
+                    b.HasOne("AniRun.Domain.Aggregates.Genre", null)
                         .WithMany()
                         .HasForeignKey("GenresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AniRun.Domain.Models.Title", null)
+                    b.HasOne("AniRun.Domain.Aggregates.Title", null)
                         .WithMany()
                         .HasForeignKey("TitlesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AniRun.Domain.Models.Studio", b =>
+            modelBuilder.Entity("AniRun.Domain.Aggregates.Studio", b =>
                 {
                     b.Navigation("Titles");
                 });
 
-            modelBuilder.Entity("AniRun.Domain.Models.Title", b =>
+            modelBuilder.Entity("AniRun.Domain.Aggregates.Title", b =>
                 {
                     b.Navigation("Episodes");
                 });

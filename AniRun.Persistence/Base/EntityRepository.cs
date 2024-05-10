@@ -1,5 +1,8 @@
+using System.Linq.Expressions;
 using AniRun.Domain.Base;
 using AniRun.DomainServices.Base;
+using Ardalis.Specification;
+using Ardalis.Specification.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -14,9 +17,15 @@ public abstract class EntityRepository<TEntity> : IEntityRepository<TEntity> whe
     {
         _context = context;
     }
+    
     public async Task<List<TEntity>> FindAll(CancellationToken cancellationToken = default)
     {
         return await Entities.AsQueryable().ToListAsync(cancellationToken);
+    }
+    
+    public async Task<List<TEntity>> FindAll(ISpecification<TEntity> spec, CancellationToken cancellationToken = default)
+    {
+        return await Entities.WithSpecification(spec).AsQueryable().ToListAsync(cancellationToken);
     }
     
     public async Task<TEntity> FindById(Guid id, CancellationToken cancellationToken = default)
@@ -25,9 +34,21 @@ public abstract class EntityRepository<TEntity> : IEntityRepository<TEntity> whe
         return entity;
     }
     
+    public async Task<TEntity> FindById(Guid id, Specification<TEntity> spec, CancellationToken cancellationToken = default)
+    {
+        var entity = await Entities.WithSpecification(spec).FirstOrDefaultAsync(en => en.Id == id, cancellationToken);
+        return entity;
+    }
+    
     public async Task<List<TEntity>> FindByIds(List<Guid> ids, CancellationToken cancellationToken = default)
     {
         var entities = await Entities.Where(entity => ids.Contains(entity.Id)).ToListAsync(cancellationToken);
+        return entities;
+    }
+    
+    public async Task<List<TEntity>> FindByIds(List<Guid> ids, Specification<TEntity> spec, CancellationToken cancellationToken = default)
+    {
+        var entities = await Entities.WithSpecification(spec).Where(entity => ids.Contains(entity.Id)).ToListAsync(cancellationToken);
         return entities;
     }
 
@@ -72,5 +93,15 @@ public abstract class EntityRepository<TEntity> : IEntityRepository<TEntity> whe
             }
         }
         await _context.SaveChangesAsync(cancellationToken);
+    }
+    
+    public IQueryable<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties)
+    {
+        IQueryable<TEntity> query = Entities;
+        foreach (var includeProperty in includeProperties)
+        {
+            query = Entities.Include(includeProperty);
+        }
+        return query;
     }
 }

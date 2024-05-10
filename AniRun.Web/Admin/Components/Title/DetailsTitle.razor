@@ -3,7 +3,7 @@
 <Modal Width="1000" Visible="_visible" OnCancel="@HandleCancel" Footer="null">
     <h3 class="text-center">Подробности об аниме @Title.Name</h3>
     <div style="height: 300px; width: 330px;">
-        <img class="rounded float-left" style="width:100%; height:100%; border-radius:10px; object-fit: cover;" src="@Title.Picture.Url" />
+        <img class="rounded float-left" style="width:100%; height:100%; border-radius:10px; object-fit: cover;" src="@(Title.Picture != null ? Title.Picture.Url  : "")" alt="Постер" />
     </div>
     <dl class="row fs-5">
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Название</dt>
@@ -13,13 +13,13 @@
         <dd style="margin-top: 20px;" class="col-sm-9">@Title.Description</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Длительность</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@Title.Duration</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Duration != null ? Title.Duration  : "Не определена")</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Начало выхода</dt>
         <dd style="margin-top: 20px;" class="col-sm-9">@Title.StartDateTitle</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Конец выхода</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@Title.EndDateTitle</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.EndDateTitle != null ? Title.EndDateTitle  : "Не определена")</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Количество эпизодов</dt>
         <dd style="margin-top: 20px;" class="col-sm-9">@Title.LastEpisode</dd>
@@ -34,7 +34,7 @@
         <dd style="margin-top: 20px;" class="col-sm-9">@Title.Rating</dd>
         
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Студия</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@Title.Studio.Name</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Studio != null ? Title.Studio.Name  : "Не определена")</dd>
     </dl>
 </Modal>
 

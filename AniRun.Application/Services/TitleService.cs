@@ -1,7 +1,9 @@
 using AniRun.Application.Models.FormModels;
 using AniRun.Application.Models.ViewModels;
 using AniRun.Domain.Aggregates;
+using AniRun.Domain.Specifications;
 using AniRun.DomainServices.Repositories;
+using Ardalis.Specification;
 using AutoMapper;
 
 namespace AniRun.Application.Services;
@@ -12,29 +14,34 @@ public class TitleService : ITitleService
     private readonly IMapper _mapper;
     private readonly IMediaService _mediaService;
     private readonly IEpisodeRepository _episodeRepository;
+    private readonly IGenreRepository _genreRepository;
     
-    public TitleService(ITitleRepository repository, IMapper mapper, IMediaService mediaService, IEpisodeRepository episodeRepository)
+    public TitleService(ITitleRepository repository, IMapper mapper, IMediaService mediaService, IEpisodeRepository episodeRepository, IGenreRepository genreRepository)
     {
         _repository = repository;
         _mapper = mapper;
         _mediaService = mediaService;
         _episodeRepository = episodeRepository;
+        _genreRepository = genreRepository;
     }
     
     public async Task<List<ViewTitle>> GetTitles(CancellationToken cancellationToken = default)
     {
+        GetTitlesSpecifcation spec = new GetTitlesSpecifcation();
         var result = new List<ViewTitle>();
-        var titles = await _repository.FindAll(cancellationToken);
+        var titles = await _repository.FindAll(spec, cancellationToken);
         result = _mapper.Map<List<ViewTitle>>(titles);
         foreach (var title in result)
-            title.Picture.Url = _mediaService.GetUrlMedia(title.PictureId.Value);
+            if (title.PictureId != null)
+                title.Picture.Url = _mediaService.GetUrlMedia(title.PictureId.Value);
         return result;
     }
 
     public async Task<ViewTitle> GetTitle(Guid id, CancellationToken cancellationToken = default)
     {
+        GetTitlesSpecifcation spec = new GetTitlesSpecifcation();
         var result = new ViewTitle();
-        var title = await _repository.FindById(id, cancellationToken);
+        var title = await _repository.FindById(id, spec, cancellationToken);
         result = _mapper.Map<ViewTitle>(title);
         result.Picture.Url = _mediaService.GetUrlMedia(title.PictureId.Value);
         return result;
@@ -51,6 +58,9 @@ public class TitleService : ITitleService
             title.PictureId = picture.Id;
         }
 
+        var ids = title.Genres.Select(genre => genre.Id).ToList();
+        title.Genres = await _genreRepository.FindByIds(ids);
+        
         title = await _repository.AddAsnyc(title, cancellationToken);
         await _repository.SaveChangesAsync(cancellationToken);
         result = _mapper.Map<ViewTitle>(title);

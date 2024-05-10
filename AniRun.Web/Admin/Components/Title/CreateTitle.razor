@@ -12,19 +12,19 @@
         </FormItem>
         
         <FormItem Style="margin-top: 30px;">
-            <Input Placeholder="Описание" @bind-Value="@Title.Name"></Input>
+            <Input Placeholder="Описание" @bind-Value="@Title.Description"></Input>
         </FormItem>
         
         <FormItem Required Label="Длительность эпизода" Style="margin: 20px 0;">
-            <TimePicker TValue="TimeSpan?" Picker="@DatePickerType.Time" @bind-Value="@Title.Duration"/>
+            <TimePicker TValue="TimeOnly?" Picker="@DatePickerType.Time" @bind-Value="@Title.Duration"/>
         </FormItem>
         
         <FormItem Required Label="Начало выхода" Style="margin: 20px 0;">
-            <DatePicker TValue="DateTimeOffset" DefaultValue="DateTimeOffset.Now" Picker="@DatePickerType.Date" @bind-Value="@Title.StartDateTitle"/>
+            <DatePicker TValue="DateTimeOffset" DefaultValue="DateTimeOffset.UtcNow" Picker="@DatePickerType.Date" @bind-Value="@Title.StartDateTitle"/>
         </FormItem>
                 
         <FormItem Required Label="Конец выхода" Style="margin: 20px 0;">
-            <DatePicker TValue="DateTimeOffset?" Picker="@DatePickerType.Date" @bind-Value="@Title.EndDateTitle"/>
+            <DatePicker TValue="DateTimeOffset?"  DefaultValue="DateTimeOffset.UtcNow" Picker="@DatePickerType.Date" @bind-Value="@Title.EndDateTitle"/>
         </FormItem>
         
         <FormItem>
@@ -55,13 +55,18 @@
         
         <FormItem Label="Жанры" Style="margin: 20px 0;">
             <Select TItem="ViewGenre"
-                    TItemValue="Guid?"
+                    TItemValue="ViewGenre"
                     Mode="multiple"
-                    LabelName="@nameof(ViewGenre.Name)"
-                    ValueName="@nameof(ViewGenre.Id)"
-                    bind-Values="@Title.Genres"
-                    DataSource="Genres"
-                    EnableSearch />
+                    @bind-Values="@Title.Genres"
+                    DataSource="@Genres"
+                    EnableSearch>
+                <SelectOptions>
+                    @foreach (var genre in Genres)
+                    {
+                        <SelectOption TItemValue="ViewGenre" TItem="ViewGenre" Value=@genre Label=@genre.Name/>
+                    }
+                </SelectOptions>
+            </Select>
         </FormItem>
         
         <FormItem Label="Постер аниме">
@@ -90,8 +95,9 @@
     List<UploadFileItem> fileList = new();
     public FormMedia Image { get; set; }
     public FormTitle Title = new();
-    public List<ViewGenre> Genres = new List<ViewGenre>();
+    public IEnumerable<ViewGenre> Genres = new List<ViewGenre>();
     public List<ViewStudio> Studios = new();
+    public List<Guid?> SelectedGenres = new List<Guid?>();
 
     private async Task ShowModal()
     {
@@ -110,10 +116,6 @@
     private async Task OnFinish(EditContext context)
     {
         var model = context.Model as FormTitle;
-        for (int i = 0; i < model.Genres.Count; i++)
-        {
-            model.Genres[i] = await _genreService.GetGenre(model.Genres[i].Id);
-        }
         await _titleService.CreateTitle(model);
         await OnTitleCreated.InvokeAsync();
         _visible = false;

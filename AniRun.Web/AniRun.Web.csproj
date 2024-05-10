@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AniRun.Application\AniRun.Domain.csproj" />
+        <ProjectReference Include="..\AniRun.Domain\AniRun.Domain.csproj" />
         <ProjectReference Include="..\AniRun.Application\AniRun.Application.csproj" />
         <ProjectReference Include="..\AniRun.Persistence\AniRun.Persistence.csproj" />
     </ItemGroup>

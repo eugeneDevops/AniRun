@@ -9,7 +9,7 @@
     <ActionColumn Width="100">
         <Space>
             <SpaceItem>
-                <UpdateTitle Studio="@context" OnTitleEdited="OnTitlesChange"/>
+                <UpdateTitle Title="@context" OnTitleEdited="OnTitlesChange"/>
             </SpaceItem>
             <SpaceItem>
                 <Popconfirm Title="Удалить аниме?" OnConfirm="async () => await DeleteTitle(context.Id)" OkText="Да" CancelText="Нет">
