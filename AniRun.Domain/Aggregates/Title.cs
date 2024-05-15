@@ -11,7 +11,7 @@ public class Title : BaseRecord
     public TimeOnly? Duration { get; set; }
     public DateTimeOffset StartDateTitle { get; set; }
     public DateTimeOffset? EndDateTitle { get;set; }
-    public Media Picture { get; set; }
+    public Media? Picture { get; set; }
     public Guid? PictureId { get; set; }
     public int? LastEpisode { get; set; }
     public TypeTitle Type { get; set; }

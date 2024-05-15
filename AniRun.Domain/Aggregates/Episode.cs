@@ -5,6 +5,7 @@ namespace AniRun.Domain.Aggregates;
 public class Episode : BaseRecord
 {
     public string Name { get; set; }
+    public Guid VideoId { get; set; }
     public Media Video { get; set; }
     public int Number { get; set; }
     public Title Title { get; set; }

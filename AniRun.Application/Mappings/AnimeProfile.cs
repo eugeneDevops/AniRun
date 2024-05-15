@@ -14,8 +14,9 @@ public class AnimeProfile : Profile
         CreateMap<FormGenre, Genre>().ReverseMap();
         CreateMap<ViewGenre, FormGenre>().ReverseMap();
         
-        CreateMap<IFormFile, Media>().ReverseMap();
         CreateMap<ViewMedia, Media>().ReverseMap();
+        CreateMap<FormMedia, Media>().ReverseMap();
+        CreateMap<FormMedia, ViewMedia>().ReverseMap();
         
         CreateMap<ViewStudio, Studio>().ReverseMap();
         CreateMap<FormStudio, Studio>().ReverseMap();

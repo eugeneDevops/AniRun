@@ -13,16 +13,19 @@ public class TitleService : ITitleService
     private readonly ITitleRepository _repository;
     private readonly IMapper _mapper;
     private readonly IMediaService _mediaService;
+    private readonly IMediaRepository _mediaRepository;
     private readonly IEpisodeRepository _episodeRepository;
     private readonly IGenreRepository _genreRepository;
     
-    public TitleService(ITitleRepository repository, IMapper mapper, IMediaService mediaService, IEpisodeRepository episodeRepository, IGenreRepository genreRepository)
+    public TitleService(ITitleRepository repository, IMapper mapper, IMediaService mediaService, IEpisodeRepository
+        episodeRepository, IGenreRepository genreRepository, IMediaRepository mediaRepository)
     {
         _repository = repository;
         _mapper = mapper;
         _mediaService = mediaService;
         _episodeRepository = episodeRepository;
         _genreRepository = genreRepository;
+        _mediaRepository = mediaRepository;
     }
     
     public async Task<List<ViewTitle>> GetTitles(CancellationToken cancellationToken = default)
@@ -56,6 +59,7 @@ public class TitleService : ITitleService
         {
             picture = await _mediaService.UploadMedia(formTitle.Picture, cancellationToken);
             title.PictureId = picture.Id;
+            title.Picture = null;
         }
 
         var ids = title.Genres.Select(genre => genre.Id).ToList();
@@ -74,16 +78,16 @@ public class TitleService : ITitleService
         var titleDb = await _repository.FindById(id, cancellationToken);
         if (titleDb == null)
             return result;
-        var title = _mapper.Map<Title>(formTitle);
         var picture = new ViewMedia();
-        if (formTitle.Picture != null)
+        if (formTitle.Picture != null && formTitle.PictureId != titleDb.PictureId)
         {
             picture = await _mediaService.UploadMedia(formTitle.Picture, cancellationToken);
-            title.PictureId = picture.Id;
+            formTitle.PictureId = picture.Id;
+            formTitle.Picture = null;
         }
-        title = await _repository.UpdateAsnyc(id, title, cancellationToken);
+        _mapper.Map(formTitle, titleDb);
         await _repository.SaveChangesAsync(cancellationToken);
-        result = _mapper.Map<ViewTitle>(title);
+        result = _mapper.Map<ViewTitle>(titleDb);
         result.Picture = picture;
         return result;
     }
@@ -95,6 +99,7 @@ public class TitleService : ITitleService
         if (title == null)
             return result;
         title = await _repository.DeleteAsync(id, cancellationToken);
+        await _repository.SaveChangesAsync(cancellationToken);
         result = _mapper.Map<ViewTitle>(title);
         return result;
     }
@@ -105,10 +110,10 @@ public class TitleService : ITitleService
         var title = await _repository.FindById(id, cancellationToken);
         if (title == null)
             return result;
-        var media = new ViewMedia();
-        if (formEpisode.Video != null)
-            media = await _mediaService.UploadMedia(formEpisode.Video, cancellationToken);
         var episode = _mapper.Map<Episode>(formEpisode);
+        var video = await _mediaRepository.FindById(formEpisode.VideoId, cancellationToken);
+        episode.VideoId = video.Id;
+        episode.Video = null;
         title.Episodes.Add(episode);
         await _repository.SaveChangesAsync(cancellationToken);
         return result;

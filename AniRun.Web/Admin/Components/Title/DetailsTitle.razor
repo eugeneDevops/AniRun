@@ -1,8 +1,10 @@
+@inject IMediaService _mediaService
+
 <Button Type="Primary" OnClick="ShowModal">Подробнее</Button>
 
 <Modal Width="1000" Visible="_visible" OnCancel="@HandleCancel" Footer="null">
     <h3 class="text-center">Подробности об аниме @Title.Name</h3>
-    <div style="height: 300px; width: 330px;">
+    <div style="height: 450px; width: 300px;">
         <img class="rounded float-left" style="width:100%; height:100%; border-radius:10px; object-fit: cover;" src="@(Title.Picture != null ? Title.Picture.Url  : "")" alt="Постер" />
     </div>
     <dl class="row fs-5">
@@ -13,25 +15,36 @@
         <dd style="margin-top: 20px;" class="col-sm-9">@Title.Description</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Длительность</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Duration != null ? Title.Duration  : "Не определена")</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Duration != null ? Title.Duration.Value  : "Не определена")</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Начало выхода</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@Title.StartDateTitle</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@Title.StartDateTitle.ToString()</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Конец выхода</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.EndDateTitle != null ? Title.EndDateTitle  : "Не определена")</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.EndDateTitle.ToString() != null ? Title.EndDateTitle  : "Не определена")</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Количество эпизодов</dt>
         <dd style="margin-top: 20px;" class="col-sm-9">@Title.LastEpisode</dd>
         
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Тип</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@Title.Type</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(EnumHelper<TypeTitle>.GetDisplayName(Title.Type))</dd>
         
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Статус</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@Title.Status</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(EnumHelper<StatusTitle>.GetDisplayName(Title.Status))</dd>
         
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Возрастная категория</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@Title.Rating</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(EnumHelper<Rating>.GetDisplayName(Title.Rating))</dd>
+        
+        @foreach (var episode in Title.Episodes)
+        {
+            if (_mediaService.GetUrlMedia(episode.VideoId) != null)
+            {
+                <video preload="metadata" controls="controls" width="500" height="400">
+                    <source type="video/mp4" src="@_mediaService.GetUrlMedia(episode.VideoId)">
+                </video>
+            }
+        }
+            
         
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Студия</dt>
         <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Studio != null ? Title.Studio.Name  : "Не определена")</dd>

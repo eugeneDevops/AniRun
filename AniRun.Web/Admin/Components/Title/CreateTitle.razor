@@ -8,11 +8,11 @@
     <h3 class="text-center">Добавление аниме</h3>
     <Form Model="Title" OnFinish="OnFinish">
         <FormItem Style="margin-top: 30px;">
-            <Input Placeholder="Название студии" @bind-Value="@Title.Name"></Input>
+            <Input Placeholder="Название аниме" @bind-Value="@Title.Name"/>
         </FormItem>
         
         <FormItem Style="margin-top: 30px;">
-            <Input Placeholder="Описание" @bind-Value="@Title.Description"></Input>
+            <TextArea Placeholder="Описание" @bind-Value="@Title.Description"></TextArea>
         </FormItem>
         
         <FormItem Required Label="Длительность эпизода" Style="margin: 20px 0;">
@@ -28,7 +28,7 @@
         </FormItem>
         
         <FormItem>
-            <AntDesign.InputNumber  Style="width:200px" @bind-Value="@Title.LastEpisode" Min="1" Max="9999" PlaceHolder="Последняя серия"></AntDesign.InputNumber>
+            <AntDesign.InputNumber  Style="width:200px" @bind-Value="@Title.LastEpisode" DefaultValue="1" Min="0" Max="9999" PlaceHolder="Последняя серия"></AntDesign.InputNumber>
         </FormItem>
         
         <FormItem Required Label="Тип аниме" Style="margin: 20px 0;">
@@ -97,7 +97,6 @@
     public FormTitle Title = new();
     public IEnumerable<ViewGenre> Genres = new List<ViewGenre>();
     public List<ViewStudio> Studios = new();
-    public List<Guid?> SelectedGenres = new List<Guid?>();
 
     private async Task ShowModal()
     {

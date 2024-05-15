@@ -1,16 +1,19 @@
-﻿version: '3.8'
+﻿version: '3.7'
 
 services:
   s3server:
-    image: scality/s3server
+    image: scality/s3server:latest
     container_name: S3AniRun
     ports:
       - "8000:8000"
     environment:
-      - port=8000
-      - accessKey=5e806973-626b-4a2f-ba82-d99d9a995eae
-      - secretKey=eb303786-3e5b-4e74-bee0-49e993ccdf45
-      - bucket=bucket-anirun
+      - PORT=8000
+      - SCALITY_ACCESS_KEY_ID=5e806973-626b-4a2f-ba82-d99d9a995eae
+      - SCALITY_SECRET_ACCESS_KEY=eb303786-3e5b-4e74-bee0-49e993ccdf45
     volumes:
-      - /path/to/store/data:/usr/src/app/localData
+      - data:/usr/src/app/localData
+      - metadata:/usr/src/app/localMetadata
     restart: always
+volumes:
+  data:
+  metadata:

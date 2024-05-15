@@ -1,11 +1,13 @@
 using Amazon.S3;
 using Amazon.S3.Model;
+using Amazon.S3.Transfer;
 using AniRun.Application.Models;
 using AniRun.Application.Models.FormModels;
 using AniRun.Application.Models.ViewModels;
 using AniRun.Domain.Aggregates;
 using AniRun.DomainServices.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
@@ -30,6 +32,7 @@ public class MediaService : IMediaService
         _s3Client = new AmazonS3Client(credentials, new AmazonS3Config()
         {
             ServiceURL = credentialsStorage.Link,
+            ForcePathStyle = true,
         });
         _s3Link = credentialsStorage.Link;
         _bucketName = credentialsStorage.BucketName;
@@ -45,6 +48,8 @@ public class MediaService : IMediaService
         };
         await _s3Client.PutBucketAsync(argsBucket, cancellationToken);
     }
+    
+    
 
     public async Task<ViewMedia> UploadMedia(FormMedia file, CancellationToken cancellationToken = default)
     {
@@ -61,11 +66,43 @@ public class MediaService : IMediaService
                     BucketName = _bucketName,
                     Key = media.Id.ToString(),
                     InputStream = stream,
-                    ContentType = media.ContentType
+                    ContentType = media.ContentType,
+                    CannedACL = S3CannedACL.PublicRead
                 };
                 await _s3Client.PutObjectAsync(args, cancellationToken);
                 Console.WriteLine("Media uploaded successfully.");
             }
+            result = _mapper.Map<ViewMedia>(media);
+        }
+        catch (AmazonS3Exception e)
+        {
+            Console.WriteLine("Error encountered on server. Message:'{0}' when uploading an media", e.Message);
+        }
+        return result;
+    }
+    
+    public async Task<ViewMedia> UploadMedia(Stream stream, IBrowserFile file, CancellationToken cancellationToken = default)
+    {
+        var result = new ViewMedia();
+        try
+        {
+            var media = new Media()
+            {
+                ContentType = file.ContentType,
+                FileName = file.Name
+            };
+            media = await _repository.AddAsnyc(media, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
+            var args = new PutObjectRequest
+            {
+                BucketName = _bucketName,
+                Key = media.Id.ToString(),
+                InputStream = stream,
+                ContentType = media.ContentType
+            };
+            args.Metadata.Add("Content-Disposition", "inline");
+            await _s3Client.PutObjectAsync(args, cancellationToken);
+            Console.WriteLine("Media uploaded successfully.");
             result = _mapper.Map<ViewMedia>(media);
         }
         catch (AmazonS3Exception e)
@@ -82,7 +119,6 @@ public class MediaService : IMediaService
         {
             var media = await _repository.FindById(id, cancellationToken);
             result = _mapper.Map<ViewMedia>(media);
-            result.Url = $"{_s3Link}/{_bucketName}/{id}";
         }
         catch (AmazonS3Exception e)
         {
@@ -118,6 +154,15 @@ public class MediaService : IMediaService
 
     public string GetUrlMedia(Guid id)
     {
-        return $"{_s3Link}/{_bucketName}/{id}";
+        var args = new GetPreSignedUrlRequest()
+        {
+            BucketName = _bucketName,
+            Key = id.ToString(),
+            Expires = DateTime.UtcNow.AddHours(2),
+            Protocol = Protocol.HTTP,
+            Verb = HttpVerb.GET
+        };
+        var url = _s3Client.GetPreSignedURL(args);
+        return url;
     }
 }

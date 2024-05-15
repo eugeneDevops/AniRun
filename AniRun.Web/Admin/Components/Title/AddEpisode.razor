@@ -1,5 +1,86 @@
-<h3>AddEpisode</h3>
+@inject ITitleService _titleService 
+@inject IMediaService _mediaService 
+@inject IMapper _mapper;
+
+<Button Type="Primary" OnClick="ShowModal">Добавить эпизод</Button>
+
+    <Modal Width="1000" AfterClose="async () => { if (OnTitleEdited.HasDelegate) { await OnTitleEdited.InvokeAsync();}}" Visible="_visible" 
+        OnCancel="@HandleCancel" Footer="null">
+        <h3 class="text-center">Редактирование аниме</h3>
+        <Form Model="Episode" OnFinish="OnFinish">
+            <FormItem Style="margin-top: 30px;">
+                <Input Placeholder="Название эпизода" @bind-Value="@Episode.Name"/>
+            </FormItem>
+            
+            <FormItem Style="margin-top: 30px;">
+                <Input Placeholder="Серия" @bind-Value="@Episode.Number"/>
+            </FormItem>
+            
+            <FormItem Label="Постер аниме">
+                <InputFile id="fileInput" OnChange="UploadFile" hidden/>
+                <Upload Name="file" FileList="fileList">
+                    <label class="ant-btn" for="fileInput">
+                        <Icon Type="upload"/>
+                        Прикрепить файл
+                    </label>
+                </Upload>
+                <Spin Style="margin-top: 10px; margin-bottom: 10px;" Spinning=@_fileLoading></Spin>
+            </FormItem>
+            
+            <FormItem>
+                <Button Type="@ButtonType.Primary" HtmlType="submit">
+                    Создать
+                </Button>
+            </FormItem>
+        </Form>
+    </Modal>
 
 @code {
+    [Parameter] public ViewTitle Title { get; set; }
+    [Parameter] public EventCallback OnTitleEdited { get; set; }
+    public bool _visible;
+    public bool _fileLoading;
+    List<UploadFileItem> fileList = new();
+    public FormTitle MappedTitle = new();
+    public FormEpisode Episode = new();
+
+    private async Task ShowModal()
+    {
+        _visible = true;
+        MappedTitle = _mapper.Map<FormTitle>(Title);
+    }
+
+    private void HandleCancel()
+    {
+        _visible = false;
+    }
     
+    private async Task OnFinish(EditContext context)
+    {
+        var model = context.Model as FormEpisode;
+        await _titleService.AddEpisode(Title.Id, model);
+        _visible = false;
+    }
+    
+    private async Task UploadFile(InputFileChangeEventArgs e)
+    {
+        _fileLoading = true;
+        StateHasChanged();
+        var file = e.File;
+        await using var fileStream = file.OpenReadStream(file.Size * 100000);
+        var media = await _mediaService.UploadMedia(fileStream, file);
+        fileList = new List<UploadFileItem>()
+        {
+            new()
+            {
+                FileName = file.Name,
+                Size = file.Size
+            }
+        };
+
+        _fileLoading = false;
+        StateHasChanged();
+        Episode.Video = _mapper.Map<FormMedia>(media);
+        Episode.VideoId = media.Id;
+    }
 }

@@ -141,8 +141,8 @@ namespace AniRun.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset?>("Duration")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<TimeOnly?>("Duration")
+                        .HasColumnType("time without time zone");
 
                     b.Property<DateTimeOffset>("EditedAt")
                         .HasColumnType("timestamp with time zone");
