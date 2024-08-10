@@ -7,12 +7,12 @@
 <Modal Width="1000" Visible="_visible" OnCancel="@HandleCancel" Footer="null">
     <h3 class="text-center">Добавление аниме</h3>
     <Form Model="Title" OnFinish="OnFinish">
-        <FormItem Style="margin-top: 30px;">
-            <Input Placeholder="Название аниме" @bind-Value="@Title.Name"/>
+        <FormItem Required Label="Название аниме" Style="margin-top: 30px;">
+            <Input @bind-Value="@Title.Name"/>
         </FormItem>
         
-        <FormItem Style="margin-top: 30px;">
-            <TextArea Placeholder="Описание" @bind-Value="@Title.Description"></TextArea>
+        <FormItem Required Label="Описание" Style="margin-top: 30px;">
+            <TextArea @bind-Value="@Title.Description"></TextArea>
         </FormItem>
         
         <FormItem Required Label="Длительность эпизода" Style="margin: 20px 0;">
@@ -27,8 +27,8 @@
             <DatePicker TValue="DateTimeOffset?"  DefaultValue="DateTimeOffset.UtcNow" Picker="@DatePickerType.Date" @bind-Value="@Title.EndDateTitle"/>
         </FormItem>
         
-        <FormItem>
-            <AntDesign.InputNumber  Style="width:200px" @bind-Value="@Title.LastEpisode" DefaultValue="1" Min="0" Max="9999" PlaceHolder="Последняя серия"></AntDesign.InputNumber>
+        <FormItem Required Label="Количество серий">
+            <AntDesign.InputNumber  Style="width:200px" @bind-Value="@Title.LastEpisode" DefaultValue="1" Min="0" Max="9999"></AntDesign.InputNumber>
         </FormItem>
         
         <FormItem Required Label="Тип аниме" Style="margin: 20px 0;">
@@ -70,9 +70,9 @@
         </FormItem>
         
         <FormItem Label="Постер аниме">
-            <InputFile id="fileInput" OnChange="UploadFile" hidden/>
+            <InputFile id="imageInput" OnChange="@UploadImage" hidden/>
             <Upload Name="file" FileList="fileList">
-                <label class="ant-btn" for="fileInput">
+                <label class="ant-btn" for="imageInput">
                     <Icon Type="upload"/>
                     Прикрепить файл
                 </label>
@@ -92,7 +92,7 @@
     [Parameter] public EventCallback OnTitleCreated { get; set; }
     public bool _visible;
     public bool _fileLoading;
-    List<UploadFileItem> fileList = new();
+    private List<UploadFileItem> fileList = new();
     public FormMedia Image { get; set; }
     public FormTitle Title = new();
     public IEnumerable<ViewGenre> Genres = new List<ViewGenre>();
@@ -120,7 +120,7 @@
         _visible = false;
     }
     
-    private async Task UploadFile(InputFileChangeEventArgs e)
+    private async Task UploadImage(InputFileChangeEventArgs e)
     {
         _fileLoading = true;
         StateHasChanged();

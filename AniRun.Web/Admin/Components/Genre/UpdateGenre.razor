@@ -17,7 +17,7 @@
             <Input Placeholder="Название жанра" @bind-Value="@mappedGenre.Name"></Input>
         </FormItem>
         <FormItem Style="margin-top: 30px;">
-            <Input Placeholder="Описание" @bind-Value="@mappedGenre.Description"></Input>
+            <TextArea Placeholder="Описание" @bind-Value="@mappedGenre.Description"></TextArea>
         </FormItem>
         <FormItem>
             <Button Type="@ButtonType.Primary" HtmlType="submit">

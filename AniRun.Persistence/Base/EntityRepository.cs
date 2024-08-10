@@ -94,14 +94,4 @@ public abstract class EntityRepository<TEntity> : IEntityRepository<TEntity> whe
         }
         await _context.SaveChangesAsync(cancellationToken);
     }
-    
-    public IQueryable<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties)
-    {
-        IQueryable<TEntity> query = Entities;
-        foreach (var includeProperty in includeProperties)
-        {
-            query = Entities.Include(includeProperty);
-        }
-        return query;
-    }
 }

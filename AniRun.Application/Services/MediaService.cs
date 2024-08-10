@@ -48,8 +48,6 @@ public class MediaService : IMediaService
         };
         await _s3Client.PutBucketAsync(argsBucket, cancellationToken);
     }
-    
-    
 
     public async Task<ViewMedia> UploadMedia(FormMedia file, CancellationToken cancellationToken = default)
     {
@@ -98,7 +96,8 @@ public class MediaService : IMediaService
                 BucketName = _bucketName,
                 Key = media.Id.ToString(),
                 InputStream = stream,
-                ContentType = media.ContentType
+                ContentType = media.ContentType,
+                CannedACL = S3CannedACL.PublicRead
             };
             args.Metadata.Add("Content-Disposition", "inline");
             await _s3Client.PutObjectAsync(args, cancellationToken);
@@ -154,15 +153,7 @@ public class MediaService : IMediaService
 
     public string GetUrlMedia(Guid id)
     {
-        var args = new GetPreSignedUrlRequest()
-        {
-            BucketName = _bucketName,
-            Key = id.ToString(),
-            Expires = DateTime.UtcNow.AddHours(2),
-            Protocol = Protocol.HTTP,
-            Verb = HttpVerb.GET
-        };
-        var url = _s3Client.GetPreSignedURL(args);
+        var url = $"{_s3Link}/{_bucketName}/{id}";
         return url;
     }
 }

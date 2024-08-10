@@ -6,7 +6,7 @@
 
     <Modal Width="1000" AfterClose="async () => { if (OnTitleEdited.HasDelegate) { await OnTitleEdited.InvokeAsync();}}" Visible="_visible" 
         OnCancel="@HandleCancel" Footer="null">
-        <h3 class="text-center">Редактирование аниме</h3>
+        <h3 class="text-center">Добавление эпизода</h3>
         <Form Model="Episode" OnFinish="OnFinish">
             <FormItem Style="margin-top: 30px;">
                 <Input Placeholder="Название эпизода" @bind-Value="@Episode.Name"/>
@@ -16,10 +16,10 @@
                 <Input Placeholder="Серия" @bind-Value="@Episode.Number"/>
             </FormItem>
             
-            <FormItem Label="Постер аниме">
-                <InputFile id="fileInput" OnChange="UploadFile" hidden/>
+            <FormItem Label="Видеозапись">
+                <InputFile id="addEpisode" OnChange="@UploadVideo" hidden/>
                 <Upload Name="file" FileList="fileList">
-                    <label class="ant-btn" for="fileInput">
+                    <label class="ant-btn" for="addEpisode">
                         <Icon Type="upload"/>
                         Прикрепить файл
                     </label>
@@ -40,7 +40,7 @@
     [Parameter] public EventCallback OnTitleEdited { get; set; }
     public bool _visible;
     public bool _fileLoading;
-    List<UploadFileItem> fileList = new();
+    private List<UploadFileItem> fileList = new();
     public FormTitle MappedTitle = new();
     public FormEpisode Episode = new();
 
@@ -62,7 +62,7 @@
         _visible = false;
     }
     
-    private async Task UploadFile(InputFileChangeEventArgs e)
+    private async Task UploadVideo(InputFileChangeEventArgs e)
     {
         _fileLoading = true;
         StateHasChanged();

@@ -35,8 +35,12 @@ public class TitleService : ITitleService
         var titles = await _repository.FindAll(spec, cancellationToken);
         result = _mapper.Map<List<ViewTitle>>(titles);
         foreach (var title in result)
+        {
+            title.Episodes = title.Episodes.OrderBy(ep => ep.Number).ToList();
             if (title.PictureId != null)
                 title.Picture.Url = _mediaService.GetUrlMedia(title.PictureId.Value);
+        }
+            
         return result;
     }
 
@@ -79,13 +83,17 @@ public class TitleService : ITitleService
         if (titleDb == null)
             return result;
         var picture = new ViewMedia();
+        
         if (formTitle.Picture != null && formTitle.PictureId != titleDb.PictureId)
         {
             picture = await _mediaService.UploadMedia(formTitle.Picture, cancellationToken);
             formTitle.PictureId = picture.Id;
             formTitle.Picture = null;
         }
+        
         _mapper.Map(formTitle, titleDb);
+        var ids = titleDb.Genres.Select(genre => genre.Id).ToList();
+        titleDb.Genres = await _genreRepository.FindByIds(ids);
         await _repository.SaveChangesAsync(cancellationToken);
         result = _mapper.Map<ViewTitle>(titleDb);
         result.Picture = picture;
@@ -125,8 +133,7 @@ public class TitleService : ITitleService
         var episode = await _episodeRepository.FindById(id, cancellationToken);
         if (episode == null)
             return result; 
-        await _mediaService.DeleteMedia(episode.Video.Id, cancellationToken);
-        episode = await _episodeRepository.DeleteAsync(id, cancellationToken);
+        await _mediaService.DeleteMedia(episode.VideoId, cancellationToken);
         await _repository.SaveChangesAsync(cancellationToken);
         result = _mapper.Map<ViewEpisode>(episode);
         return result;

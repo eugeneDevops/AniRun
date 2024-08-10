@@ -1,4 +1,5 @@
 @inject IMediaService _mediaService
+@inject ITitleService _titleService
 
 <Button Type="Primary" OnClick="ShowModal">Подробнее</Button>
 
@@ -14,14 +15,14 @@
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Описание</dt>
         <dd style="margin-top: 20px;" class="col-sm-9">@Title.Description</dd>
 
-        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Длительность</dt>
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Длительность эпизода</dt>
         <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Duration != null ? Title.Duration.Value  : "Не определена")</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Начало выхода</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@Title.StartDateTitle.ToString()</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@Title.StartDateTitle.ToString("dd MMMM yyyy")</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Конец выхода</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.EndDateTitle.ToString() != null ? Title.EndDateTitle  : "Не определена")</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.EndDateTitle.ToString() != null ? Title.EndDateTitle?.ToString("dd MMMM yyyy")  : "Не определена")</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Количество эпизодов</dt>
         <dd style="margin-top: 20px;" class="col-sm-9">@Title.LastEpisode</dd>
@@ -35,24 +36,57 @@
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Возрастная категория</dt>
         <dd style="margin-top: 20px;" class="col-sm-9">@(EnumHelper<Rating>.GetDisplayName(Title.Rating))</dd>
         
-        @foreach (var episode in Title.Episodes)
-        {
-            if (_mediaService.GetUrlMedia(episode.VideoId) != null)
-            {
-                <video preload="metadata" controls="controls" width="500" height="400">
-                    <source type="video/mp4" src="@_mediaService.GetUrlMedia(episode.VideoId)">
-                </video>
-            }
-        }
-            
-        
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Студия</dt>
         <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Studio != null ? Title.Studio.Name  : "Не определена")</dd>
+        
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Жанры</dt>
+        <dd style="margin-top: 20px;" class="col-sm-9">
+        @foreach (var genre in Title.Genres)
+        {
+            @(genre != null ? genre.Name + " "  : "Не определена")
+        }</dd>
+        
+        <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Эпизоды</dt>
+        
+        <Select TItem="ViewEpisode"
+                TItemValue="ViewEpisode?"
+                @bind-Value="@Episode"
+                DataSource="Title.Episodes"
+                EnableSearch>
+                    <SelectOptions>
+                        @foreach (var episode in Title.Episodes)
+                        {
+                            <SelectOption TItemValue="ViewEpisode" TItem="ViewEpisode" Value=@episode Label=@($"Эпизод {episode.Number}")/>
+                        }
+                    </SelectOptions>
+        </Select>
+        <div>
+            @if (string.IsNullOrWhiteSpace(Episode.Id.ToString()))
+            {
+                <div style="display: flex; flex-direction: row; justify-content: flex-start;">
+
+                    <p class="text-start text-break">Эпизод @Episode.Number</p>
+                    <Popconfirm Title="Удалить эпизод?" OnConfirm="async () => await DeleteEpisode(Episode.Id)" OkText="Да" CancelText="Нет">
+                        <Icon Style="cursor: pointer;" Width="2em" Height="2em" Theme="twotone" TwotoneColor="#960018" Type="delete"></Icon>
+                    </Popconfirm>
+                </div>
+                @if (_mediaService.GetUrlMedia(Episode.VideoId) != null)
+                {
+                    <video preload="metadata" controls style="object-fit: cover; width: 400px; height: 250px;">
+                        <source type="video/mp4" src="@_mediaService.GetUrlMedia(Episode.VideoId)">
+                    </video>
+                }
+            }
+        </div>
+        
     </dl>
 </Modal>
 
 @code {
     [Parameter] public ViewTitle Title { get; set; }
+    [Parameter] public EventCallback OnTitlesChange { get; set; }
+
+    public ViewEpisode Episode { get; set; } = new ViewEpisode();
 
     public bool _visible;
 
@@ -69,5 +103,16 @@
     private async Task OnFinish()
     {
         _visible = false;
+    }
+
+    private async Task ShowEpisode()
+    {
+        
+    }
+    
+    public async Task DeleteEpisode(Guid episodeId)
+    {
+        await _titleService.DeleteEpisode(episodeId);
+        await OnTitlesChange.InvokeAsync();
     }
 }
