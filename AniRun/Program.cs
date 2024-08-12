@@ -1,10 +1,7 @@
 using System.Net;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using AniRun.Application.Extensions;
 using AniRun.Persistence.Extensions;
 using AniRun.Api;
-using AniRun.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

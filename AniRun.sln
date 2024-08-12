@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AniRun.Application", "AniRu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AniRun.Persistence", "AniRun.Persistence\AniRun.Persistence.csproj", "{C79F02E1-3334-49BC-96C0-212C7E819764}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AniRun.Api", "AniRun.Api\AniRun.Api.csproj", "{C912B5D2-30A6-4BC2-A503-20A170419608}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AniRun", "AniRun\AniRun.csproj", "{C912B5D2-30A6-4BC2-A503-20A170419608}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AniRun.Web", "AniRun.Web\AniRun.Web.csproj", "{8DEFE4A5-73B2-4746-9B7D-98831891DC20}"
 EndProject
