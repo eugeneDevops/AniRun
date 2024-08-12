@@ -2,9 +2,9 @@
 
 <Table TItem="ViewTitle" DataSource="Titles">
     <Column Title="Название" Sortable @bind-Field="@context.Name">@context.Name</Column>
-    <Column Title="Тип" Sortable @bind-Field="@context.Type">@(EnumHelper<TypeTitle>.GetDisplayName(context.Type))</Column>
-    <Column Title="Статус" Sortable @bind-Field="@context.Status">@(EnumHelper<StatusTitle>.GetDisplayName(context.Status))</Column>
-    <Column Title="Возрастная категория" Sortable @bind-Field="@context.Rating">@(EnumHelper<Rating>.GetDisplayName(context.Rating))</Column>
+    <Column Title="Тип" Sortable @bind-Field="@context.Type">@(context.Type != null ? EnumHelper<TypeTitle>.GetDisplayName(context.Type.Value) : "udnefined")</Column>
+    <Column Title="Статус" Sortable @bind-Field="@context.Status">@(context.Status != null ? EnumHelper<StatusTitle>.GetDisplayName(context.Status.Value) : "udnefined")</Column>
+    <Column Title="Возрастная категория" Sortable @bind-Field="@context.Rating">@(context.Rating != null ? EnumHelper<Rating>.GetDisplayName(context.Rating.Value)  : "udnefined")</Column>
     <ActionColumn Width="100"><DetailsTitle Title="@context" OnTitlesChange="OnTitlesChange"></DetailsTitle></ActionColumn>
     <ActionColumn Width="100">
         <Space>

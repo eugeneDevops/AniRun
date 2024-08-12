@@ -20,7 +20,7 @@
         </FormItem>
         
         <FormItem Required Label="Начало выхода" Style="margin: 20px 0;">
-            <DatePicker TValue="DateTimeOffset" DefaultValue="DateTimeOffset.UtcNow" Picker="@DatePickerType.Date" @bind-Value="@Title.StartDateTitle"/>
+            <DatePicker TValue="DateTimeOffset?" DefaultValue="DateTimeOffset.UtcNow" Picker="@DatePickerType.Date" @bind-Value="@Title.StartDateTitle"/>
         </FormItem>
                 
         <FormItem Required Label="Конец выхода" Style="margin: 20px 0;">
@@ -32,15 +32,15 @@
         </FormItem>
         
         <FormItem Required Label="Тип аниме" Style="margin: 20px 0;">
-            <EnumSelect TEnum="TypeTitle" @bind-Value=@Title.Type />
+            <EnumSelect TEnum="TypeTitle?" @bind-Value=@Title.Type />
         </FormItem>
         
         <FormItem Required Label="Статус аниме" Style="margin: 20px 0;">
-            <EnumSelect TEnum="StatusTitle" @bind-Value=@Title.Status />
+            <EnumSelect TEnum="StatusTitle?" @bind-Value=@Title.Status />
         </FormItem>
         
         <FormItem Required Label="Возрастная категория" Style="margin: 20px 0;">
-            <EnumSelect TEnum="Rating" @bind-Value=@Title.Rating />
+            <EnumSelect TEnum="Rating?" @bind-Value=@Title.Rating />
         </FormItem>
         
         <FormItem Label="Студия" Style="margin: 20px 0;">

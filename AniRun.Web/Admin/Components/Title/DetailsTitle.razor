@@ -16,34 +16,34 @@
         <dd style="margin-top: 20px;" class="col-sm-9">@Title.Description</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Длительность эпизода</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Duration != null ? Title.Duration.Value  : "Не определена")</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Duration != null ? Title.Duration.Value  : "udnefined")</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Начало выхода</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@Title.StartDateTitle.ToString("dd MMMM yyyy")</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.StartDateTitle != null ? Title.StartDateTitle.Value.ToString("dd MMMM yyyy") : "udnefined")</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Конец выхода</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.EndDateTitle.ToString() != null ? Title.EndDateTitle?.ToString("dd MMMM yyyy")  : "Не определена")</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.EndDateTitle.ToString() != null ? Title.EndDateTitle?.ToString("dd MMMM yyyy")  : "udnefined")</dd>
 
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Количество эпизодов</dt>
         <dd style="margin-top: 20px;" class="col-sm-9">@Title.LastEpisode</dd>
         
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Тип</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@(EnumHelper<TypeTitle>.GetDisplayName(Title.Type))</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Type != null ? EnumHelper<TypeTitle>.GetDisplayName(Title.Type.Value) : "udnefined")</dd>
         
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Статус</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@(EnumHelper<StatusTitle>.GetDisplayName(Title.Status))</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Status != null ? EnumHelper<StatusTitle>.GetDisplayName(Title.Status.Value) : "udnefined")</dd>
         
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Возрастная категория</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@(EnumHelper<Rating>.GetDisplayName(Title.Rating))</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Rating != null ? EnumHelper<Rating>.GetDisplayName(Title.Rating.Value)  : "udnefined")</dd>
         
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Студия</dt>
-        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Studio != null ? Title.Studio.Name  : "Не определена")</dd>
+        <dd style="margin-top: 20px;" class="col-sm-9">@(Title.Studio != null ? Title.Studio.Name  : "udnefined")</dd>
         
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Жанры</dt>
         <dd style="margin-top: 20px;" class="col-sm-9">
         @foreach (var genre in Title.Genres)
         {
-            @(genre != null ? genre.Name + " "  : "Не определена")
+            @(genre != null ? genre.Name + " "  : "udnefined")
         }</dd>
         
         <dt style="margin-top: 20px;" class="fw-bolder col-sm-3">Эпизоды</dt>
