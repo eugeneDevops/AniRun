@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "AniRun.Api": {
+    "AniRun": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

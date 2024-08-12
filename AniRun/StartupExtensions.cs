@@ -1,4 +1,4 @@
-namespace AniRun.Api;
+namespace AniRun;
 
 public static class StartupExtensions
 {

@@ -1,7 +1,7 @@
 using System.Net;
 using AniRun.Application.Extensions;
 using AniRun.Persistence.Extensions;
-using AniRun.Api;
+using AniRun;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +35,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
+
 app.UseDeveloperExceptionPage();
 app.UseFileServer();
 app.UseCors("CorsPolicy");
